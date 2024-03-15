@@ -1,21 +1,14 @@
 <script setup lang="ts">
-
 const form = ref({
   email: "test@example.com",
   password: "password",
 });
 
+const auth = useAuthStore();
+
 const handleSubmit = async () => {
-  await useApiFetch("/sanctum/csrf-cookie");
-
-  await useApiFetch("/login", {
-    method: "POST",
-    body: form.value,
-  });
-
-  const { data } = await useApiFetch("/api/user");
-
-  console.log(data);
+  const { error } = auth.login(form.value);
+  console.log(error);
 };
 </script>
 

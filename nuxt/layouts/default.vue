@@ -1,7 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const auth = useAuthStore();
+</script>
 
 <template>
   <div>
+    <pre>{{ auth.user }}</pre>
     <ul>
       <li><NuxtLink to="/">Home</NuxtLink></li>
       <li><NuxtLink to="/register">Register</NuxtLink></li>
