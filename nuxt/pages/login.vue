@@ -1,33 +1,19 @@
 <script setup lang="ts">
+
 const form = ref({
   email: "test@example.com",
   password: "password",
 });
 
 const handleSubmit = async () => {
-  await useFetch("http://localhost:8000/sanctum/csrf-cookie", {
-    credentials: "include",
-  });
+  await useApiFetch("/sanctum/csrf-cookie");
 
-  const token = useCookie("XSRF-TOKEN");
-
-  await useFetch("http://localhost:8000/login", {
-    credentials: "include",
+  await useApiFetch("/login", {
     method: "POST",
     body: form.value,
-    watch: false,
-    headers: {
-      "X-XSRF-TOKEN": token.value as string,
-    },
   });
 
-  const { data } = await useFetch("http://localhost:8000/api/user", {
-    credentials: "include",
-    watch: false,
-    headers: {
-      "X-XSRF-TOKEN": token.value as string,
-    },
-  });
+  const { data } = await useApiFetch("/api/user");
 
   console.log(data);
 };
