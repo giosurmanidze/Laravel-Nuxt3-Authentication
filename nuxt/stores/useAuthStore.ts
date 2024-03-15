@@ -11,6 +11,13 @@ type Credentials = {
   password: string;
 };
 
+type RegistrationInfo = {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+};
+
 export const useAuthStore = defineStore("useAuthStore", () => {
   const user = ref<User | null>(null);
 
@@ -34,11 +41,24 @@ export const useAuthStore = defineStore("useAuthStore", () => {
     return login;
   };
 
+  const register = async (info: RegistrationInfo) => {
+    await useApiFetch("/sanctum/csrf-cookie");
+
+    const register = await useApiFetch("/register", {
+      method: "POST",
+      body: info,
+    });
+
+    await fetchUser();
+
+    return register;
+  };
+
   const logout = async () => {
     await useApiFetch("/logout", { method: "POST" });
     user.value = null;
-    navigateTo("/login")
+    navigateTo("/login");
   };
 
-  return { user, login, isLoggedIn, fetchUser, logout };
+  return { user, login, isLoggedIn, fetchUser, logout, register };
 });
